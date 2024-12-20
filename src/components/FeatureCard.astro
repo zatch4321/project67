@@ -1,0 +1,21 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+<div class="group p-6 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 hover:border-primary-500 transition-all duration-300 transform hover:-translate-y-2" data-aos="fade-up">
+  <div class="bg-gradient-to-br from-primary-500 to-secondary-500 w-16 h-16 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+    <i class={`fas fa-${title === 'AI Research' ? 'brain' : title === 'Machine Learning' ? 'cogs' : 'chart-bar'} text-2xl text-white`}></i>
+  </div>
+  <h3 class="text-2xl font-bold text-white mb-4">{title}</h3>
+  <p class="text-gray-300 mb-6">{description}</p>
+  <button 
+    class="px-6 py-2 bg-gray-700 hover:bg-primary-600 text-white rounded-lg transition-colors duration-300"
+    onclick={`learnMore('${title}')`}
+  >
+    Learn More
+  </button>
+</div>

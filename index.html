@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThirdEye AI - Internship Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7'
+            },
+            secondary: {
+              400: '#e879f9',
+              500: '#d946ef',
+              600: '#c026d3'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: linear-gradient(to bottom right, #111827, #1f2937, #111827);
+      color: #f3f4f6;
+      min-height: 100vh;
+    }
+    .font-heading {
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="bg-gray-800/50 backdrop-blur-md border-b border-gray-700 sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="#" class="text-2xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 text-transparent bg-clip-text">
+        ThirdEye AI
+      </a>
+      <div class="flex items-center space-x-6">
+        <div class="hidden md:flex space-x-6">
+          <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors">Home</a>
+          <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors">About</a>
+          <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors">Programs</a>
+          <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors">Contact</a>
+        </div>
+        <!-- Auth Buttons -->
+        <div id="authButtons">
+          <button onclick="toggleAuthModal('login')" class="px-4 py-2 text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors">Login</button>
+          <button onclick="toggleAuthModal('register')" class="px-4 py-2 text-white bg-secondary-500 rounded-lg hover:bg-secondary-600 transition-colors ml-2">Register</button>
+        </div>
+        <!-- User Profile (Hidden by default) -->
+        <div id="userProfile" class="hidden">
+          <div class="flex items-center space-x-2 cursor-pointer" onclick="toggleProfileMenu()">
+            <img id="userAvatar" class="w-8 h-8 rounded-full" src="" alt="Profile">
+            <span id="userName" class="text-gray-300"></span>
+          </div>
+          <div id="profileMenu" class="hidden absolute right-4 top-16 w-48 bg-gray-800 rounded-lg shadow-xl">
+            <div class="py-2">
+              <a href="#" onclick="showDashboard()" class="block px-4 py-2 text-gray-300 hover:bg-gray-700">Dashboard</a>
+              <a href="#" onclick="logout()" class="block px-4 py-2 text-gray-300 hover:bg-gray-700">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Auth Modal -->
+  <div id="authModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-gray-800 p-8 rounded-xl max-w-md w-full mx-4">
+      <div class="flex justify-between items-center mb-6">
+        <h2 id="modalTitle" class="text-2xl font-bold text-white"></h2>
+        <button onclick="toggleAuthModal()" class="text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form id="authForm" onsubmit="handleAuth(event)" class="space-y-4">
+        <div id="nameField" class="hidden">
+          <label class="block text-gray-300 mb-2">Name</label>
+          <input type="text" id="name" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white" required>
+        </div>
+        <div>
+          <label class="block text-gray-300 mb-2">Email</label>
+          <input type="email" id="email" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white" required>
+        </div>
+        <div>
+          <label class="block text-gray-300 mb-2">Password</label>
+          <input type="password" id="password" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white" required>
+        </div>
+        <button type="submit" id="authSubmit" class="w-full py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600">
+          Submit
+        </button>
+        <p class="text-center text-gray-400">
+          <span id="authSwitch"></span>
+          <a href="#" id="authSwitchLink" class="text-primary-400 hover:text-primary-300"></a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-12">
+    <div id="welcomeContent">
+      <h1 class="text-4xl md:text-6xl font-bold text-center mb-8 bg-gradient-to-r from-primary-400 to-secondary-400 text-transparent bg-clip-text">
+        Welcome to ThirdEye AI Internship Portal
+      </h1>
+      <p class="text-xl text-center text-gray-300 mb-12">
+        Join us in shaping the future of AI. Discover opportunities that challenge your potential.
+      </p>
+      <div class="flex justify-center">
+        <img src="https://third-eye.ai/wp-content/uploads/2023/09/logoThirdEyeAicrop.png" alt="ThirdEye AI Logo" class="w-32 h-32 rounded-lg shadow-lg">
+      </div>
+    </div>
+
+    <!-- Dashboard (Hidden by default) -->
+    <div id="dashboardContent" class="hidden">
+      <h2 class="text-3xl font-bold mb-8">My Dashboard</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-bold mb-4">Application Status</h3>
+          <p id="applicationStatus" class="text-gray-300">No active applications</p>
+        </div>
+        <div class="bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-bold mb-4">Documents</h3>
+          <ul id="documentsList" class="text-gray-300">
+            <li>No documents uploaded</li>
+          </ul>
+        </div>
+        <div class="bg-gray-800 rounded-lg p-6">
+          <h3 class="text-xl font-bold mb-4">Profile</h3>
+          <div id="profileDetails" class="text-gray-300"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // User management
+    let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+    function toggleAuthModal(type = null) {
+      const modal = document.getElementById('authModal');
+      const nameField = document.getElementById('nameField');
+      const modalTitle = document.getElementById('modalTitle');
+      const authSubmit = document.getElementById('authSubmit');
+      const authSwitch = document.getElementById('authSwitch');
+      const authSwitchLink = document.getElementById('authSwitchLink');
+
+      if (type === null) {
+        modal.style.display = 'none';
+        return;
+      }
+
+      if (type === 'login') {
+        nameField.style.display = 'none';
+        modalTitle.textContent = 'Login';
+        authSubmit.textContent = 'Sign In';
+        authSwitch.textContent = "Don't have an account? ";
+        authSwitchLink.textContent = 'Register';
+        authSwitchLink.onclick = () => toggleAuthModal('register');
+      } else {
+        nameField.style.display = 'block';
+        modalTitle.textContent = 'Register';
+        authSubmit.textContent = 'Sign Up';
+        authSwitch.textContent = 'Already have an account? ';
+        authSwitchLink.textContent = 'Login';
+        authSwitchLink.onclick = () => toggleAuthModal('login');
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function handleAuth(event) {
+      event.preventDefault();
+      const isLogin = document.getElementById('nameField').style.display === 'none';
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (isLogin) {
+        const user = users.find(u => u.email === email && u.password === password);
+        if (user) {
+          loginUser(user);
+        } else {
+          alert('Invalid credentials');
+        }
+      } else {
+        const name = document.getElementById('name').value;
+        if (users.some(u => u.email === email)) {
+          alert('Email already registered');
+          return;
+        }
+        const user = { name, email, password, applications: [] };
+        users.push(user);
+        localStorage.setItem('users', JSON.stringify(users));
+        loginUser(user);
+      }
+    }
+
+    function loginUser(user) {
+      currentUser = user;
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      document.getElementById('authButtons').style.display = 'none';
+      document.getElementById('userProfile').style.display = 'block';
+      document.getElementById('userName').textContent = user.name;
+      document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`;
+      toggleAuthModal();
+      showDashboard();
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('currentUser');
+      document.getElementById('authButtons').style.display = 'block';
+      document.getElementById('userProfile').style.display = 'none';
+      document.getElementById('dashboardContent').style.display = 'none';
+      document.getElementById('welcomeContent').style.display = 'block';
+      toggleProfileMenu();
+    }
+
+    function toggleProfileMenu() {
+      const menu = document.getElementById('profileMenu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function showDashboard() {
+      document.getElementById('welcomeContent').style.display = 'none';
+      document.getElementById('dashboardContent').style.display = 'block';
+      document.getElementById('profileDetails').innerHTML = `
+        <p><strong>Name:</strong> ${currentUser.name}</p>
+        <p><strong>Email:</strong> ${currentUser.email}</p>
+      `;
+      toggleProfileMenu();
+    }
+
+    // Initialize UI based on auth state
+    if (currentUser) {
+      loginUser(currentUser);
+    }
+  </script>
+</body>
+</html>

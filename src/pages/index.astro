@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+import ApplicationForm from '../components/ApplicationForm.astro';
+import ApplicationsTable from '../components/ApplicationsTable.astro';
+import Dashboard from '../components/dashboard/Dashboard.astro';
+---
+
+<Layout title="ThirdEye AI - Internship Portal">
+  <Navbar />
+  <Hero />
+  
+  <div class="container mx-auto my-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <FeatureCard 
+        title="AI Research"
+        description="Explore cutting-edge AI innovations."
+      />
+      <FeatureCard 
+        title="Machine Learning"
+        description="Delve into supervised and unsupervised learning."
+      />
+      <FeatureCard 
+        title="Data Science"
+        description="Uncover insights from data."
+      />
+    </div>
+  </div>
+
+  <Dashboard />
+  <ApplicationForm />
+  <ApplicationsTable />
+
+  <script>
+    import { initAuthStateListener } from '../utils/auth';
+    import '../utils/ui';
+    
+    // Initialize auth state
+    document.addEventListener('DOMContentLoaded', () => {
+      initAuthStateListener();
+    });
+  </script>
+</Layout>

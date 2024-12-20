@@ -1,0 +1,133 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import { getCurrentUser } from '../utils/auth';
+
+// Server-side check for authentication
+const user = getCurrentUser();
+if (!user) {
+  return Astro.redirect('/');
+}
+---
+
+<Layout title="Dashboard - ThirdEye AI">
+  <Navbar />
+  
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 text-transparent bg-clip-text mb-8">
+      My Dashboard
+    </h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Application Status -->
+      <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6">
+        <h3 class="text-xl font-bold text-gray-200 mb-4">Application Status</h3>
+        <div id="applicationStatus" class="space-y-4">
+          Loading...
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6">
+        <h3 class="text-xl font-bold text-gray-200 mb-4">My Documents</h3>
+        <div id="documentsList" class="space-y-3">
+          Loading...
+        </div>
+      </div>
+
+      <!-- Profile -->
+      <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6">
+        <h3 class="text-xl font-bold text-gray-200 mb-4">Profile Details</h3>
+        <div id="profileDetails" class="space-y-3">
+          Loading...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { getUserData } from '../utils/database';
+    
+    async function updateDashboard() {
+      const userData = await getUserData();
+      
+      // Update application status
+      document.getElementById('applicationStatus').innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="text-gray-400">Status:</span>
+          <span class="px-3 py-1 bg-${getStatusColor(userData.status)}/20 text-${getStatusColor(userData.status)}-400 rounded-full text-sm">
+            ${userData.status}
+          </span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-gray-400">Submitted:</span>
+          <span class="text-gray-300">${userData.submissionDate}</span>
+        </div>
+      `;
+
+      // Update documents
+      document.getElementById('documentsList').innerHTML = userData.documents.map(doc => `
+        <div class="flex items-center justify-between">
+          <span class="text-gray-300">
+            <i class="fas fa-file-${getFileIcon(doc.type)} text-${getFileColor(doc.type)}-400 mr-2"></i>
+            ${doc.name}
+          </span>
+          <a href="/api/documents/${doc.id}" class="text-primary-400 hover:text-primary-300">
+            <i class="fas fa-download"></i>
+          </a>
+        </div>
+      `).join('');
+
+      // Update profile
+      document.getElementById('profileDetails').innerHTML = `
+        <div>
+          <label class="text-gray-400">Name:</label>
+          <p class="text-gray-300">${userData.name}</p>
+        </div>
+        <div>
+          <label class="text-gray-400">Email:</label>
+          <p class="text-gray-300">${userData.email}</p>
+        </div>
+        <div>
+          <label class="text-gray-400">Skills:</label>
+          <p class="text-gray-300">${userData.skills}</p>
+        </div>
+      `;
+    }
+
+    function getStatusColor(status) {
+      const colors = {
+        'Pending': 'yellow',
+        'Under Review': 'blue',
+        'Accepted': 'green',
+        'Rejected': 'red'
+      };
+      return colors[status] || 'gray';
+    }
+
+    function getFileIcon(type) {
+      const icons = {
+        'pdf': 'pdf',
+        'doc': 'word',
+        'docx': 'word',
+        'jpg': 'image',
+        'png': 'image'
+      };
+      return icons[type] || 'file';
+    }
+
+    function getFileColor(type) {
+      const colors = {
+        'pdf': 'red',
+        'doc': 'blue',
+        'docx': 'blue',
+        'jpg': 'green',
+        'png': 'green'
+      };
+      return colors[type] || 'gray';
+    }
+
+    // Initialize dashboard
+    updateDashboard();
+  </script>
+</Layout>

@@ -1,0 +1,39 @@
+---
+---
+<div class="flex items-center space-x-4">
+  <button
+    id="loginBtn"
+    class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg hover:opacity-90 transition-opacity"
+    onclick="toggleLoginModal()"
+  >
+    Login
+  </button>
+  <div
+    id="userProfile"
+    class="hidden items-center space-x-2 cursor-pointer"
+    onclick="toggleProfileMenu()"
+  >
+    <img
+      id="userAvatar"
+      class="w-8 h-8 rounded-full border-2 border-primary-500"
+      src="https://api.dicebear.com/7.x/avataaars/svg?seed=default"
+      alt="User avatar"
+    />
+    <span id="userName" class="text-gray-300 hover:text-primary-400"></span>
+  </div>
+</div>
+
+<div id="profileMenu" class="hidden absolute right-4 top-16 w-48 bg-gray-800/95 backdrop-blur-md rounded-lg shadow-xl border border-gray-700 z-50">
+  <div class="py-2">
+    <a href="#dashboard" class="block px-4 py-2 text-gray-300 hover:bg-gray-700/50 hover:text-primary-400" onclick="showDashboard()">
+      <i class="fas fa-columns mr-2"></i> Dashboard
+    </a>
+    <a href="#applications" class="block px-4 py-2 text-gray-300 hover:bg-gray-700/50 hover:text-primary-400" onclick="showApplications()">
+      <i class="fas fa-file-alt mr-2"></i> My Applications
+    </a>
+    <hr class="my-1 border-gray-700" />
+    <a href="#" class="block px-4 py-2 text-gray-300 hover:bg-gray-700/50 hover:text-red-400" onclick="logout()">
+      <i class="fas fa-sign-out-alt mr-2"></i> Logout
+    </a>
+  </div>
+</div>
